@@ -1,0 +1,21 @@
+# .NET build artefakti
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Osjetljive konfiguracije
+appsettings.Development.json
+appsettings.Production.json
+appsettings.Local.json
+
+# Docker
+*.db
+*.bak
+*.bacpac
+
+# Ostalo
+.vs/
+*.log 
