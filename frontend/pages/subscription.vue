@@ -443,7 +443,7 @@ async function upgradeToPremium(priceId: string) {
 
 async function cancelSubscription() {
   showCancelSubscriptionModal.value = true
-}
+  }
 
 async function cancelSubscriptionConfirmed() {
   showCancelSubscriptionModal.value = false

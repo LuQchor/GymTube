@@ -44,4 +44,4 @@ namespace GymTube.API.Controllers
             return Ok(new { message });
         }
     }
-} 
+}

@@ -31,14 +31,14 @@ namespace GymTube.API.Controllers
             {
                 return NotFound("User not found.");
             }
-            
+
             var domain = _configuration["FrontendDomain"] ?? "http://localhost:3000";
 
             var options = new SessionCreateOptions
             {
                 // CustomerId je opcionalan, ali koristan. Ako korisnik već postoji u Stripeu,
                 // sva plaćanja će biti vezana za njega.
-                Customer = user.StripeCustomerId, 
+                Customer = user.StripeCustomerId,
                 PaymentMethodTypes = new List<string> { "card" },
                 LineItems = new List<SessionLineItemOptions>
                 {
@@ -181,9 +181,9 @@ namespace GymTube.API.Controllers
             }
         }
     }
-    
+
     public class CreateCheckoutSessionRequest
     {
         public string PriceId { get; set; } = string.Empty;
     }
-} 
+}

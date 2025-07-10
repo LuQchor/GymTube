@@ -14,4 +14,4 @@ namespace GymTube.API.Services
             return BCrypt.Net.BCrypt.Verify(password, hash);
         }
     }
-} 
+}

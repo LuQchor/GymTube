@@ -36,7 +36,7 @@ builder.Services.AddHttpClient();
 // Configure the database connection
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddScoped<IDbConnection>(c => new SqlConnection(connectionString));
-builder.Services.AddScoped<IUserRepository, UserRepository>(sp => 
+builder.Services.AddScoped<IUserRepository, UserRepository>(sp =>
     new UserRepository(sp.GetRequiredService<IDbConnection>(), connectionString!));
 builder.Services.AddScoped<IVideoRepository, VideoRepository>();
 

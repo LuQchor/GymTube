@@ -26,4 +26,4 @@ namespace GymTube.API.Application.Commands
             return true;
         }
     }
-} 
+}

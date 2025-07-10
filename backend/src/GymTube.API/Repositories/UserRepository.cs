@@ -61,7 +61,7 @@ namespace GymTube.API.Repositories
                             Description = @Description,
                             UpdatedAt = GETDATE()
                         WHERE Id = @Id";
-            
+
             await _dbConnection.ExecuteAsync(sql, user);
         }
 
@@ -90,14 +90,14 @@ namespace GymTube.API.Repositories
 
         public async Task<bool> IsNameTakenAsync(string name, Guid? excludeUserId = null)
         {
-            var sql = excludeUserId.HasValue 
+            var sql = excludeUserId.HasValue
                 ? "SELECT COUNT(*) FROM Users WHERE Name = @Name AND Id != @ExcludeUserId"
                 : "SELECT COUNT(*) FROM Users WHERE Name = @Name";
-            
-            object parameters = excludeUserId.HasValue 
+
+            object parameters = excludeUserId.HasValue
                 ? new { Name = name, ExcludeUserId = excludeUserId.Value }
                 : new { Name = name };
-            
+
             var count = await _dbConnection.ExecuteScalarAsync<int>(sql, parameters);
             return count > 0;
         }
@@ -106,7 +106,7 @@ namespace GymTube.API.Repositories
         {
             using var connection = new SqlConnection(_connectionString);
             await connection.OpenAsync();
-            
+
             var sql = @"
                 UPDATE Users 
                 SET Name = @Name, 
@@ -123,7 +123,7 @@ namespace GymTube.API.Repositories
                 WHERE Id = @Id;
                 
                 SELECT * FROM Users WHERE Id = @Id;";
-            
+
             var parameters = new
             {
                 user.Id,
@@ -139,7 +139,7 @@ namespace GymTube.API.Repositories
                 user.IsProfilePrivate,
                 user.HasPassword
             };
-            
+
             var updatedUser = await connection.QueryFirstOrDefaultAsync<User>(sql, parameters);
             return updatedUser;
         }

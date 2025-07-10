@@ -213,15 +213,16 @@ namespace GymTube.API.Controllers
                 };
 
                 var success = await _updateProfileImageHandler.Handle(command);
-                
+
                 if (success)
                 {
                     // Get updated user info and generate a new token
                     var updatedUser = await _userRepository.GetByIdAsync(userId.Value);
                     var newToken = _jwtService.GenerateToken(updatedUser!);
 
-                    return Ok(new { 
-                        success = true, 
+                    return Ok(new
+                    {
+                        success = true,
                         profileImageUrl = updatedUser?.ProfileImageUrl,
                         token = newToken,
                         message = "Profilna slika je uspješno ažurirana."
@@ -262,7 +263,7 @@ namespace GymTube.API.Controllers
 
             // Generiraj novi token s ažuriranim podacima
             var updatedToken = _jwtService.GenerateToken(user);
-            
+
             return Ok(new
             {
                 message = "Profilna slika je uspješno uklonjena.",
@@ -288,7 +289,7 @@ namespace GymTube.API.Controllers
             return Ok(new
             {
                 token,
-                user = new 
+                user = new
                 {
                     id = user.Id,
                     email = user.Email,
@@ -341,7 +342,7 @@ namespace GymTube.API.Controllers
             return Ok(new
             {
                 token,
-                user = new 
+                user = new
                 {
                     id = user.Id,
                     email = user.Email,
@@ -397,7 +398,7 @@ namespace GymTube.API.Controllers
             try
             {
                 User? user = null;
-                
+
                 // Pokušaj pronaći po emailu
                 if (identifier.Contains("@"))
                 {
@@ -455,7 +456,7 @@ namespace GymTube.API.Controllers
             var userId = GetCurrentUserId();
             if (userId == null) return Unauthorized("Invalid user ID.");
             var user = await _userRepository.GetByIdAsync(userId.Value);
-            
+
             if (user == null)
             {
                 return NotFound("User not found.");
@@ -508,7 +509,7 @@ namespace GymTube.API.Controllers
             var userId = GetCurrentUserId();
             if (userId == null) return Unauthorized("Invalid user ID.");
             var user = await _userRepository.GetByIdAsync(userId.Value);
-            
+
             if (user == null)
             {
                 return NotFound("User not found.");
@@ -686,18 +687,18 @@ namespace GymTube.API.Controllers
                 {
                     // Log the user ID being deleted for safety
                     _logger.LogInformation("Attempting to delete user {UserId} ({Email})", user.Id, user.Email);
-                    
+
                     // Verify user exists before deletion
                     var verifyUserSql = "SELECT COUNT(*) FROM Users WHERE Id = @UserId";
                     var userCount = await connection.ExecuteScalarAsync<int>(verifyUserSql, new { UserId = user.Id }, transaction);
-                    
+
                     if (userCount == 0)
                     {
                         _logger.LogWarning("User {UserId} not found in database during deletion", user.Id);
                         transaction.Rollback();
                         return NotFound(new { error = "Korisnik nije pronađen u bazi podataka." });
                     }
-                    
+
                     if (userCount > 1)
                     {
                         _logger.LogError("Multiple users found with ID {UserId} - this should not happen!", user.Id);
@@ -713,7 +714,7 @@ namespace GymTube.API.Controllers
                     // Delete user (with explicit parameter check)
                     var deleteUserSql = "DELETE FROM Users WHERE Id = @UserId";
                     var usersDeleted = await connection.ExecuteAsync(deleteUserSql, new { UserId = user.Id }, transaction);
-                    
+
                     if (usersDeleted != 1)
                     {
                         _logger.LogError("Expected to delete 1 user, but deleted {Count} users for ID {UserId}", usersDeleted, user.Id);

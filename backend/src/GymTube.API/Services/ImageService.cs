@@ -96,7 +96,7 @@ namespace GymTube.API.Services
                 // Cloudinary URL format: https://res.cloudinary.com/cloud-name/image/upload/v1234567890/folder/filename.jpg
                 var uri = new Uri(url);
                 var pathSegments = uri.AbsolutePath.Split('/');
-                
+
                 // Traži "upload" segment i uzmi sve nakon njega
                 var uploadIndex = Array.IndexOf(pathSegments, "upload");
                 if (uploadIndex >= 0 && uploadIndex + 2 < pathSegments.Length)
@@ -105,7 +105,7 @@ namespace GymTube.API.Services
                     var publicIdSegments = pathSegments.Skip(uploadIndex + 2).ToArray();
                     return string.Join("/", publicIdSegments).Replace(".jpg", "").Replace(".png", "").Replace(".gif", "");
                 }
-                
+
                 return null;
             }
             catch
@@ -114,4 +114,4 @@ namespace GymTube.API.Services
             }
         }
     }
-} 
+}

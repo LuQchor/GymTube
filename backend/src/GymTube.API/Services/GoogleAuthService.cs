@@ -34,7 +34,7 @@ namespace GymTube.API.Services
 
             var tokenResponse = await _httpClient.PostAsync("https://oauth2.googleapis.com/token", tokenRequest);
             var tokenContent = await tokenResponse.Content.ReadAsStringAsync();
-            
+
             if (!tokenResponse.IsSuccessStatusCode)
             {
                 throw new Exception($"Failed to get access token: {tokenContent}");
@@ -47,7 +47,7 @@ namespace GymTube.API.Services
             }
 
             // Step 2: Get user info using access token
-            _httpClient.DefaultRequestHeaders.Authorization = 
+            _httpClient.DefaultRequestHeaders.Authorization =
                 new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", tokenData.AccessToken);
 
             var userInfoResponse = await _httpClient.GetAsync("https://www.googleapis.com/oauth2/v2/userinfo");
@@ -100,4 +100,4 @@ namespace GymTube.API.Services
         [JsonPropertyName("verified_email")]
         public bool VerifiedEmail { get; set; }
     }
-} 
+}

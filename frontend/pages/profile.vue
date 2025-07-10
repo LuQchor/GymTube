@@ -449,9 +449,9 @@ async function removeProfileImage() {
     }
     
     try {
-        const result = await removeProfileImageApi()
-        if (result.success) {
-            await refreshUserData()
+    const result = await removeProfileImageApi()
+    if (result.success) {
+        await refreshUserData()
             // Notifikacija se već prikazuje u removeProfileImageApi funkciji
         } else {
             // Ako je došlo do greške, prikaži je
@@ -468,7 +468,7 @@ async function updateUserName() {
   if (editableName.value.trim() !== user.value.name) {
     const result = await updateUserNameApi(editableName.value)
     if (result.success) {
-      await refreshUserData()
+        await refreshUserData()
     }
   }
   // Zatim promjena lozinke ako su polja popunjena
@@ -518,7 +518,7 @@ async function updateUserName() {
     } finally {
       passwordLoading.value = false
     }
-  }
+    }
 }
 
 async function updateProfileDetails() {

@@ -19,7 +19,7 @@ namespace GymTube.API.Controllers
         public WebhooksController(IUserRepository userRepository, IConfiguration configuration, ILogger<WebhooksController> logger)
         {
             _userRepository = userRepository;
-            _webhookSecret = configuration.GetValue<string>("Stripe:WebhookSecret") 
+            _webhookSecret = configuration.GetValue<string>("Stripe:WebhookSecret")
                 ?? throw new ArgumentNullException("Stripe WebhookSecret is not configured.");
             _logger = logger;
         }
@@ -34,7 +34,7 @@ namespace GymTube.API.Controllers
             {
                 var stripeEvent = EventUtility.ConstructEvent(json,
                     Request.Headers["Stripe-Signature"], _webhookSecret);
-                
+
                 _logger.LogInformation("Webhook signature validated. Event type: {EventType}", stripeEvent.Type);
 
                 // Rukovanje događajem o uspješnom plaćanju
@@ -55,7 +55,7 @@ namespace GymTube.API.Controllers
                                 var invoiceService = new InvoiceService();
                                 var invoice = await invoiceService.GetAsync(session.InvoiceId);
                                 user.IsPremium = true;
-                                user.StripeCustomerId = session.CustomerId; 
+                                user.StripeCustomerId = session.CustomerId;
                                 user.StripeSubscriptionId = session.SubscriptionId;
                                 user.SubscriptionStatus = subscription.Status;
                                 user.PremiumExpiresAt = subscription.Items.Data[0].CurrentPeriodEnd;
@@ -76,16 +76,16 @@ namespace GymTube.API.Controllers
                     }
                     else
                     {
-                        _logger.LogInformation("Session {SessionId} is not a paid subscription (Mode: {Mode}, PaymentStatus: {PaymentStatus})", 
+                        _logger.LogInformation("Session {SessionId} is not a paid subscription (Mode: {Mode}, PaymentStatus: {PaymentStatus})",
                             session?.Id, session?.Mode, session?.PaymentStatus);
                     }
                 }
-                
+
                 // Rukovanje događajem o otkazivanju pretplate
                 if (stripeEvent.Type == "customer.subscription.deleted")
                 {
                     var subscription = stripeEvent.Data.Object as Stripe.Subscription;
-                    
+
                     if (subscription != null)
                     {
                         // Pronađi korisnika s ovim subscription ID
@@ -146,7 +146,7 @@ namespace GymTube.API.Controllers
                         }
                     }
                 }
-                
+
                 return Ok();
             }
             catch (StripeException e)
@@ -199,4 +199,4 @@ namespace GymTube.API.Controllers
         //     }
         // }
     }
-} 
+}

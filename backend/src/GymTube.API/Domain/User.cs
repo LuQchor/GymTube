@@ -17,7 +17,7 @@ namespace GymTube.API.Domain
         public string? ProfileImageUrl { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        
+
         // Nova polja za prošireni profil
         public bool IsProfilePrivate { get; set; }
         public string? Gender { get; set; }

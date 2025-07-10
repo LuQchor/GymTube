@@ -42,7 +42,7 @@ namespace GymTube.API.Repositories
                 INSERT INTO Videos (Id, Title, Description, UserId, IsPremium, IsPrivate, UploadStatus, CreatedAt, UpdatedAt)
                 OUTPUT INSERTED.*
                 VALUES (@Id, @Title, @Description, @UserId, @IsPremium, @IsPrivate, @UploadStatus, @CreatedAt, @UpdatedAt)";
-            
+
             video.Id = Guid.NewGuid();
             video.CreatedAt = DateTime.UtcNow;
             video.UpdatedAt = DateTime.UtcNow;
@@ -61,7 +61,7 @@ namespace GymTube.API.Repositories
                     MuxPlaybackId = @MuxPlaybackId, Duration = @Duration, UpdatedAt = @UpdatedAt, 
                     IsPremium = @IsPremium, IsPrivate = @IsPrivate
                 WHERE Id = @Id";
-            
+
             // Ensure null values are handled properly
             var parameters = new
             {
@@ -77,7 +77,7 @@ namespace GymTube.API.Repositories
                 video.IsPremium,
                 video.IsPrivate
             };
-            
+
             await connection.ExecuteAsync(sql, parameters);
         }
 
@@ -180,7 +180,7 @@ namespace GymTube.API.Repositories
                         (SELECT VoteType FROM Votes WHERE VideoId = @VideoId AND UserId = @UserId) as UserVote
                     FROM Videos v
                     WHERE v.Id = @VideoId";
-                
+
                 var result = await connection.QuerySingleAsync<VoteResult>(resultSql, new { VideoId = videoId, UserId = userId }, transaction);
 
                 transaction.Commit();

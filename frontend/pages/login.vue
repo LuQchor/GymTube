@@ -98,7 +98,7 @@ async function onLogin() {
     if (response.ok) {
       // Spremi JWT token
       if (typeof data.token === 'string') {
-        localStorage.setItem('authToken', data.token)
+      localStorage.setItem('authToken', data.token)
       }
       
       // "Dekodiraj" JWT da dohvatiš korisničke podatke
@@ -203,7 +203,7 @@ async function exchangeCodeForToken(code: string) {
     if (response.ok) {
       // Store JWT token
       if (typeof data.token === 'string') {
-        localStorage.setItem('authToken', data.token)
+      localStorage.setItem('authToken', data.token)
       }
       
       // "Dekodiraj" JWT da dohvatiš korisničke podatke

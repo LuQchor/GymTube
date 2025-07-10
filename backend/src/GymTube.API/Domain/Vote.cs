@@ -8,4 +8,4 @@ namespace GymTube.API.Domain
         public string VoteType { get; set; } = string.Empty; // "like" ili "dislike"
         public DateTime CreatedAt { get; set; }
     }
-} 
+}

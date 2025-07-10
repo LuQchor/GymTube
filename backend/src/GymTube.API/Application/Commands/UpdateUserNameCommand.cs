@@ -7,4 +7,4 @@ namespace GymTube.API.Application.Commands
         public Guid UserId { get; set; }
         public string NewName { get; set; } = string.Empty;
     }
-} 
+}

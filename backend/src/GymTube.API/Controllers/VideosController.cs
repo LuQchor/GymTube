@@ -32,8 +32,8 @@ namespace GymTube.API.Controllers
         private readonly IUserRepository _userRepository;
 
         public VideosController(
-            IVideoRepository videoRepository, 
-            IConfiguration configuration, 
+            IVideoRepository videoRepository,
+            IConfiguration configuration,
             ILogger<VideosController> logger,
             MuxService muxService,
             IUserRepository userRepository)
@@ -162,7 +162,7 @@ namespace GymTube.API.Controllers
                 if (!string.IsNullOrEmpty(search))
                 {
                     var searchLower = search.ToLower();
-                    videos = videos.Where(v => 
+                    videos = videos.Where(v =>
                         v.Title.ToLower().Contains(searchLower) ||
                         (v.Description != null && v.Description.ToLower().Contains(searchLower)) ||
                         (v.User?.Name != null && v.User.Name.ToLower().Contains(searchLower))
@@ -262,7 +262,7 @@ namespace GymTube.API.Controllers
 
                 // Add or update vote
                 var result = await _videoRepository.AddOrUpdateVoteAsync(id, userId.Value, request.VoteType);
-                
+
                 return Ok(new
                 {
                     message = "Vote recorded successfully.",
@@ -431,34 +431,43 @@ namespace GymTube.API.Controllers
             try
             {
                 var userId = GetCurrentUserId();
-                if (userId == null) {
+                if (userId == null)
+                {
                     return Unauthorized("Token is required");
                 }
                 var user = await _userRepository.GetByIdAsync(userId.Value);
-                if (user == null) {
+                if (user == null)
+                {
                     return Unauthorized("User not found");
                 }
                 var video = await _videoRepository.GetByIdAsync(id);
-                if (video == null) {
+                if (video == null)
+                {
                     return NotFound("Video not found");
                 }
                 var isAdmin = user.IsAdmin;
-                if (!isAdmin) {
-                    if (video.UserId != user.Id) {
+                if (!isAdmin)
+                {
+                    if (video.UserId != user.Id)
+                    {
                         return Forbid("Nije dozvoljeno brisanje tuđih videa.");
                     }
-                    if (string.IsNullOrEmpty(request.Password)) {
+                    if (string.IsNullOrEmpty(request.Password))
+                    {
                         return BadRequest("Lozinka je obavezna.");
                     }
-                    if (string.IsNullOrEmpty(user.PasswordHash)) {
+                    if (string.IsNullOrEmpty(user.PasswordHash))
+                    {
                         return BadRequest("Korisnik nema postavljenu lozinku. Postavite lozinku u profilu.");
                     }
                     var isPasswordValid = PasswordHelper.VerifyPassword(request.Password, user.PasswordHash);
-                    if (!isPasswordValid) {
+                    if (!isPasswordValid)
+                    {
                         return BadRequest("Pogrešna lozinka.");
                     }
                 }
-                if (!string.IsNullOrEmpty(video.MuxAssetId)) {
+                if (!string.IsNullOrEmpty(video.MuxAssetId))
+                {
                     await _muxService.DeleteAssetAsync(video.MuxAssetId);
                 }
                 await _videoRepository.DeleteAsync(id);
@@ -646,27 +655,27 @@ namespace GymTube.API.Controllers
             {
                 var tokenId = _configuration["Mux:TokenId"];
                 var tokenSecret = _configuration["Mux:TokenSecret"];
-                
+
                 if (string.IsNullOrEmpty(tokenId) || string.IsNullOrEmpty(tokenSecret))
                 {
                     return string.Empty;
                 }
-                
+
                 var credentials = Convert.ToBase64String(
                     System.Text.Encoding.UTF8.GetBytes($"{tokenId}:{tokenSecret}")
                 );
-                
+
                 using var client = new HttpClient();
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", credentials);
-                
+
                 var response = await client.GetAsync($"https://api.mux.com/video/v1/assets/{assetId}");
-                
+
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     var assetData = JsonSerializer.Deserialize<JsonElement>(content);
-                    
-                    if (assetData.TryGetProperty("data", out var data) && 
+
+                    if (assetData.TryGetProperty("data", out var data) &&
                         data.TryGetProperty("playback_ids", out var playbackIds) &&
                         playbackIds.GetArrayLength() > 0)
                     {
@@ -682,7 +691,7 @@ namespace GymTube.API.Controllers
             {
                 _logger.LogError($"Error getting playback ID: {ex.Message}");
             }
-            
+
             return string.Empty;
         }
 
@@ -746,4 +755,4 @@ namespace GymTube.API.Controllers
         public bool IsPremium { get; set; }
         public bool IsPrivate { get; set; }
     }
-} 
+}
